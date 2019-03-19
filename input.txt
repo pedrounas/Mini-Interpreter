@@ -1,0 +1,2 @@
+ler(xd)
+escrever(xd)
