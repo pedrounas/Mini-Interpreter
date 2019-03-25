@@ -1,2 +1,5 @@
 ler(xd)
 escrever(xd)
+22 = 35 + 10
+label L1
+goto L1

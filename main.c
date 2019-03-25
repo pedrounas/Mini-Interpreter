@@ -15,7 +15,8 @@ int main(int argc, char *argv[])
     while (fgets(line, sizeof(line), fp))
     {
         Instr instr = parser(line);
-        mkList(instr, instrList);
+        printf("%d\n", instr.op);
+        //mkList(instr, instrList);
     }
 
     return EXIT_SUCCESS;

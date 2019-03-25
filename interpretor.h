@@ -61,14 +61,14 @@ Elem mkInt(int x);
 Instr mkInstr(OpKind op, Elem x, Elem y, Elem z);
 InstrList *mkList(Instr instr, InstrList *instrList);
 
-Instr makeReadInstr(char *line);
-Instr makeWriteInstr(char *line);
-Instr makeIfInstr(char *line);
-Instr makeGotoInstr(char *line);
-Instr makeJumpInstr(char *line);
-Instr makeLabelInstr(char *line);
-Instr makeAtribInstr(char *line);
-Instr makeQuitInstr();
+// Instr makeReadInstr(char *line);
+// Instr makeWriteInstr(char *line);
+// Instr makeIfInstr(char *line);
+// Instr makeGotoInstr(char *line);
+// Instr makeJumpInstr(char *line);
+// Instr makeLabelInstr(char *line);
+// Instr makeAtribInstr(char *line);
+// Instr makeQuitInstr();
 
 void read(char line[]);
 void write(char line[]);
@@ -80,3 +80,4 @@ void insert(char *key, int value);
 /*Auxiliary functions declaration*/
 char *extractVarName(char *line, char initialDelimitator, char finalDelimitator);
 char *extractLabelName(char *line);
+//char* *extractElements(char *line);
