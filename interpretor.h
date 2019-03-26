@@ -35,7 +35,7 @@ typedef struct
 typedef struct
 {
    OpKind op;
-   Elem first, second, third;
+   Elem *first, *second, *third;
 } Instr;
 
 typedef struct List
@@ -47,37 +47,34 @@ typedef struct List
 
 typedef struct _InstrList
 {
-   Instr instr;
+   Instr *instr;
    struct _InstrList *next;
 } InstrList;
 
 List *table[HASH_SIZE];
 InstrList *instrList;
 
-Instr parser(char *line);
+Instr *parser(char *line);
+void run(InstrList *instrList);
 
-Elem mkVar(char *s);
-Elem mkInt(int x);
-Instr mkInstr(OpKind op, Elem x, Elem y, Elem z);
-InstrList *mkList(Instr instr, InstrList *instrList);
+Elem *mkVar(char *s);
+Elem *mkInt(int x);
+Elem *mkEmpty();
+Instr *mkInstr(OpKind op, Elem *x, Elem *y, Elem *z);
+InstrList *mkList(Instr *instr, InstrList *instrList);
 
-// Instr makeReadInstr(char *line);
-// Instr makeWriteInstr(char *line);
-// Instr makeIfInstr(char *line);
-// Instr makeGotoInstr(char *line);
-// Instr makeJumpInstr(char *line);
-// Instr makeLabelInstr(char *line);
-// Instr makeAtribInstr(char *line);
-// Instr makeQuitInstr();
+void runATRIB(char *name, int val);
+void runADD(char *name, int a, int b);
+void runSUB(char *name, int a, int b);
+void runMUL(char *name, int a, int b);
+void runDIV(char *name, int a, int b);
+InstrList *runIF_I(char *var, char *label, InstrList *instrList);
+void runPRINT(char *var);
+void runREAD(char *var);
+InstrList *runGOTO_I(char *label, InstrList *instrList);
+void runQUIT();
 
-void read(char line[]);
-void write(char line[]);
-void init();
+void initHashTable();
 unsigned int hash(char *str);
 List *lookup(char *key);
 void insert(char *key, int value);
-
-/*Auxiliary functions declaration*/
-char *extractVarName(char *line, char initialDelimitator, char finalDelimitator);
-char *extractLabelName(char *line);
-//char* *extractElements(char *line);

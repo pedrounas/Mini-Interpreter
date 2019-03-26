@@ -1,5 +1,8 @@
-ler(xd)
-escrever(xd)
-22 = 35 + 10
-label L1
-goto L1
+ler( xd )
+escrever( xd )
+boas = 35 + 10
+if boas goto l1
+escrever( xd )
+label l1
+escrever( boas )
+quit
