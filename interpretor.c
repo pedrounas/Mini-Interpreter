@@ -12,20 +12,14 @@ Instr *parser(char *line)
         printf("Error in parser: NULL line!\n");
         exit(EXIT_FAILURE);
     }
-    //FAZER DA FORMA mkInstr(ADD, mkVar("x"), mkInt(2), mkInt(3));
-    //void run(InstrList l)
-    // Elem mkVar(char *s);
-    // Elem makeIfInstr(int x);
-    // Instr makeIfInstr(OpKind op, Elem x, Elem y, Elem z);
-    // IList makeLabelInstr(Instr head, IList tail);
 
     char var1[256], var2[256], var3[256], op;
 
-    if (sscanf(line, "ler(%[a-z,A-Z]s)", var1) == 1)
+    if (sscanf(line, "ler(%[a-z,A-Z]s);", var1) == 1)
         return mkInstr(READ, mkVar(strdup(var1)), mkEmpty(), mkEmpty());
-    else if (sscanf(line, "escrever(%[a-z,A-Z]s)", var1) == 1)
+    else if (sscanf(line, "escrever(%[a-z,A-Z]s);", var1) == 1)
         return mkInstr(PRINT, mkVar(strdup(var1)), mkEmpty(), mkEmpty());
-    else if (sscanf(line, "%s = %s %c %s", var1, var2, &op, var3) == 4)
+    else if (sscanf(line, "%s = %s %c %[0-9,a-z,A-Z]s;", var1, var2, &op, var3) == 4)
     {
         if (isdigit(var2[0]))
         {
@@ -78,20 +72,20 @@ Instr *parser(char *line)
             }
         }
     }
-    else if (sscanf(line, "%s = %s", var1, var2) == 2)
+    else if (sscanf(line, "%s = %[0-9,a-z,A-Z]s;", var1, var2) == 2)
     {
         if (isdigit(var2[0]))
             return mkInstr(ATRIB, mkVar(strdup(var1)), mkInt(atoi(var2)), mkEmpty());
         else
             return mkInstr(ATRIB, mkVar(strdup(var1)), mkVar(strdup(var2)), mkEmpty());
     }
-    else if (sscanf(line, "if %s goto %s", var1, var2) == 2)
+    else if (sscanf(line, "if %s goto %[0-9,a-z,A-Z]s;", var1, var2) == 2)
         return mkInstr(IF_I, mkVar(strdup(var1)), mkVar(strdup(var2)), mkEmpty());
-    else if (sscanf(line, "label %s", var1) == 1)
+    else if (sscanf(line, "label %[0-9,a-z,A-Z]s;", var1) == 1)
         return mkInstr(LABEL, mkVar(strdup(var1)), mkEmpty(), mkEmpty());
-    else if (sscanf(line, "goto %s", var1) == 1)
+    else if (sscanf(line, "goto %[0-9,a-z,A-Z]s;", var1) == 1)
         return mkInstr(GOTO_I, mkVar(strdup(var1)), mkEmpty(), mkEmpty());
-    else if (sscanf(line, "quit") == 0)
+    else if (sscanf(line, "quit;") == 0)
         return mkInstr(QUIT, mkEmpty(), mkEmpty(), mkEmpty());
     else
     {

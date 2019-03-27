@@ -18,10 +18,5 @@ int main(int argc, char *argv[])
     initHashTable();
     run(InstrList);
 
-    // while(InstrList != NULL){
-    //     printf("%d\n", InstrList->instr->second->kind);
-    //     InstrList = InstrList->next;
-    // }
-
     return EXIT_SUCCESS;
 }
