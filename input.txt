@@ -1,8 +1,8 @@
-ler( xd )
-escrever( xd )
+ler(xd)
+escrever(xd)
 boas = 35 + 10
 if boas goto l1
-escrever( xd )
+escrever(xd)
 label l1
-escrever( boas )
+escrever(boas)
 quit

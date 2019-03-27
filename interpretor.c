@@ -21,9 +21,9 @@ Instr *parser(char *line)
 
     char var1[256], var2[256], var3[256], op;
 
-    if (sscanf(line, "ler(%s)", var1) == 1)
+    if (sscanf(line, "ler(%[a-z,A-Z]s)", var1) == 1)
         return mkInstr(READ, mkVar(strdup(var1)), mkEmpty(), mkEmpty());
-    else if (sscanf(line, "escrever(%s)", var1) == 1)
+    else if (sscanf(line, "escrever(%[a-z,A-Z]s)", var1) == 1)
         return mkInstr(PRINT, mkVar(strdup(var1)), mkEmpty(), mkEmpty());
     else if (sscanf(line, "%s = %s %c %s", var1, var2, &op, var3) == 4)
     {
