@@ -232,13 +232,13 @@ InstrList *runIF_I(char *var, char *label, InstrList *instrList)
 
 void runPRINT(char *var)
 {
-    printf("%s is %d\n", var, lookup(var)->value);
+    printf("The value of %s is: %d\n", var, lookup(var)->value);
 }
 
 void runREAD(char *var)
 {
     int x;
-    printf("Read variable: ");
+    printf("Insert the value of %s: ", var);
     scanf("%d", &x);
 
     insert(var, x);
@@ -264,7 +264,7 @@ InstrList *runGOTO_I(char *label, InstrList *startInstrList)
 
 void runQUIT()
 {
-    printf("Interpreter quitting! Apu Nahasapeemapetilon: Thank you come again!\n");
+    printf("Apu Nahasapeemapetilon: Thank you come again!\n");
     exit(EXIT_SUCCESS);
 }
 
