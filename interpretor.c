@@ -224,9 +224,9 @@ void runDIV(char *name, int a, int b)
 
 InstrList *runIF_I(char *var, char *label, InstrList *instrList)
 {
-    if (lookup(var)->value != 0)
+    if (lookup(var) != NULL)
         return runGOTO_I(label, instrList);
-
+    
     return NULL;
 }
 
