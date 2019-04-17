@@ -1,0 +1,12 @@
+ler(fibonacci);
+i1 = 0;
+i2 = 1;
+i3 = 0;
+label L1;
+i3 = i1 + i2;
+i1 = i2;
+i2 = i3;
+fibonacci = fibonacci - 1;
+if fibonacci goto L1;
+escrever(i3);
+quit;
