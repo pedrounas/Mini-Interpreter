@@ -15,9 +15,9 @@ Instr *parser(char *line)
 
     char var1[256], var2[256], var3[256], op;
 
-    if (sscanf(line, "ler(%[a-z,A-Z]s);", var1) == 1)
+    if (sscanf(line, "ler(%[0-9,a-z,A-Z]s);", var1) == 1)
         return mkInstr(READ, mkVar(strdup(var1)), mkEmpty(), mkEmpty());
-    else if (sscanf(line, "escrever(%[a-z,A-Z]s);", var1) == 1)
+    else if (sscanf(line, "escrever(%[0-9,a-z,A-Z]s);", var1) == 1)
         return mkInstr(PRINT, mkVar(strdup(var1)), mkEmpty(), mkEmpty());
     else if (sscanf(line, "%s = %s %c %[0-9,a-z,A-Z]s;", var1, var2, &op, var3) == 4)
     {
@@ -224,7 +224,7 @@ void runDIV(char *name, int a, int b)
 
 InstrList *runIF_I(char *var, char *label, InstrList *instrList)
 {
-    if (lookup(var) != NULL)
+    if (lookup(var) != NULL && lookup(var)->value != 0)
         return runGOTO_I(label, instrList);
     
     return NULL;
