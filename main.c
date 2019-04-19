@@ -2,14 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "interpretor.h"
+#include "interpreter.h"
 
 int main(int argc, char *argv[])
 {
     char line[256];
     char *file;
     file = (char *)malloc(sizeof(char) * 256);
-    InstrList *InstrList = NULL;
+    InstrList *startInstrList = NULL;
+    InstrList *endInstrList = NULL;
     printf("Enter the file to be parsed: ");
     scanf("%s", file);
     FILE *fp = fopen(file, "r");
@@ -22,10 +23,13 @@ int main(int argc, char *argv[])
 
     while (fgets(line, sizeof(line), fp))
     {
-        InstrList = mkList(parser(line), InstrList);
+        Instr *instr = parser(line);
+        endInstrList = mkList(instr, &startInstrList, endInstrList);
+        if(instr->op == LABEL)
+            insert(instr->first->contents.name, (intptr_t)endInstrList);
     }
     initHashTable();
-    run(InstrList);
+    run(startInstrList);
 
     return EXIT_SUCCESS;
 }

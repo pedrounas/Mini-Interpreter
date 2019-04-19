@@ -3,7 +3,7 @@
 #include <ctype.h>
 #include <string.h>
 
-#include "interpretor.h"
+#include "interpreter.h"
 
 Instr *parser(char *line)
 {
@@ -81,12 +81,8 @@ Instr *parser(char *line)
     }
     else if (sscanf(line, "if %s goto %[0-9,a-z,A-Z]s;", var1, var2) == 2)
         return mkInstr(IF_I, mkVar(strdup(var1)), mkVar(strdup(var2)), mkEmpty());
-    else if (sscanf(line, "label %[0-9,a-z,A-Z]s;", var1) == 1){
-        Instr* ret = mkInstr(LABEL, mkVar(strdup(var1)), mkEmpty(), mkEmpty());
-        printf("insert %p\n", ret);
-        insert(strdup(var1), (uintptr_t)ret);
-        return ret;
-    }
+    else if (sscanf(line, "label %[0-9,a-z,A-Z]s;", var1) == 1)
+        return mkInstr(LABEL, mkVar(strdup(var1)), mkEmpty(), mkEmpty());
     else if (sscanf(line, "goto %[0-9,a-z,A-Z]s;", var1) == 1)
         return mkInstr(GOTO_I, mkVar(strdup(var1)), mkEmpty(), mkEmpty());
     else if (sscanf(line, "quit;") == 0)
@@ -182,7 +178,6 @@ void run(InstrList *instrList)
             aux = runIF_I(instrListAux->instr->first->contents.name, instrListAux->instr->second->contents.name);
             if (aux != NULL)
                 instrListAux = aux;
-            printf("mehhhhh %p\n", instrListAux);
             break;
         case PRINT:
             runPRINT(instrListAux->instr->first->contents.name);
@@ -256,10 +251,8 @@ void runREAD(char *var)
 InstrList *runGOTO_I(char *label)
 {
     if (lookup(label) != NULL)
-        if (lookup(label)->value != 0){
-            printf("going to %lx\n", lookup(label)->value);
-            return (void *)lookup(label)->value;
-        }
+        if (lookup(label)->value != 0)
+            return (InstrList *)lookup(label)->value;
 
     printf("Error in interpreter: label \"%s\" does not exist!\n", label);
     exit(EXIT_FAILURE);
@@ -309,23 +302,19 @@ Instr *mkInstr(OpKind op, Elem *x, Elem *y, Elem *z)
     return instr;
 }
 
-InstrList *mkList(Instr *instr, InstrList *instrList)
+InstrList *mkList(Instr *instr, InstrList **startInstrList, InstrList *endInstrList)
 {
     InstrList *instrListAux = (InstrList *)malloc(sizeof(InstrList));
     instrListAux->instr = instr;
     instrListAux->next = NULL;
 
-    if (instrList == NULL)
-        return instrListAux;
+    if(*startInstrList == NULL)
+        *startInstrList = instrListAux;
 
-    InstrList *retIL = instrList;
+    if (endInstrList != NULL)
+        endInstrList->next = instrListAux;
 
-    while (instrList->next != NULL)
-        instrList = instrList->next;
-
-    instrList->next = instrListAux;
-
-    return retIL;
+    return instrListAux;
 }
 
 void initHashTable()
@@ -360,7 +349,7 @@ List *lookup(char *key)
     return NULL;
 }
 
-void insert(char *key, uintptr_t value)
+void insert(char *key, intptr_t value)
 {
     int val = (int)hash(key);
     List *aux = (List *)malloc(sizeof(List));
