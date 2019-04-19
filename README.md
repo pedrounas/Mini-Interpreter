@@ -12,7 +12,7 @@ make
 Afterwards to run the program type in the following
 
 ```
-./interpretor
+./interpreter
 ```
 Finally enter the file you wish to use and wait for the output
 

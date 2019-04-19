@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 #define HASH_SIZE 20
 #define MULTIPLIER 31
 
@@ -41,7 +43,7 @@ typedef struct
 typedef struct List
 {
    char *key;
-   int value;
+   uintptr_t value;
    struct List *next;
 } List;
 
@@ -68,13 +70,13 @@ void runADD(char *name, int a, int b);
 void runSUB(char *name, int a, int b);
 void runMUL(char *name, int a, int b);
 void runDIV(char *name, int a, int b);
-InstrList *runIF_I(char *var, char *label, InstrList *instrList);
+InstrList *runIF_I(char *var, char *label);
 void runPRINT(char *var);
 void runREAD(char *var);
-InstrList *runGOTO_I(char *label, InstrList *instrList);
+InstrList *runGOTO_I(char *label);
 void runQUIT();
 
 void initHashTable();
 unsigned int hash(char *str);
 List *lookup(char *key);
-void insert(char *key, int value);
+void insert(char *key, uintptr_t value);

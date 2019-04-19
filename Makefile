@@ -1,5 +1,5 @@
-INTERM=interpretor.c interpretor.h main.c
-PROGRAM=./interpretor
+INTERM=interpreter.c interpreter.h main.c
+PROGRAM=./interpreter
 CFLAGS=-g -Wall -fsanitize=address
 CC = gcc
 RM = rm -f

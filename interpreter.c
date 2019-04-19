@@ -81,8 +81,12 @@ Instr *parser(char *line)
     }
     else if (sscanf(line, "if %s goto %[0-9,a-z,A-Z]s;", var1, var2) == 2)
         return mkInstr(IF_I, mkVar(strdup(var1)), mkVar(strdup(var2)), mkEmpty());
-    else if (sscanf(line, "label %[0-9,a-z,A-Z]s;", var1) == 1)
-        return mkInstr(LABEL, mkVar(strdup(var1)), mkEmpty(), mkEmpty());
+    else if (sscanf(line, "label %[0-9,a-z,A-Z]s;", var1) == 1){
+        Instr* ret = mkInstr(LABEL, mkVar(strdup(var1)), mkEmpty(), mkEmpty());
+        printf("insert %p\n", ret);
+        insert(strdup(var1), (uintptr_t)ret);
+        return ret;
+    }
     else if (sscanf(line, "goto %[0-9,a-z,A-Z]s;", var1) == 1)
         return mkInstr(GOTO_I, mkVar(strdup(var1)), mkEmpty(), mkEmpty());
     else if (sscanf(line, "quit;") == 0)
@@ -105,7 +109,10 @@ void run(InstrList *instrList)
         switch (instrListAux->instr->op)
         {
         case ATRIB:
-            runATRIB(instrListAux->instr->first->contents.name, instrListAux->instr->second->contents.val);
+            if(instrListAux->instr->second->kind == INT_CONST)
+                runATRIB(instrListAux->instr->first->contents.name, instrListAux->instr->second->contents.val);
+            else
+                runATRIB(instrListAux->instr->first->contents.name, lookup(instrListAux->instr->second->contents.name)->value);
             break;
         case ADD:
             if (instrListAux->instr->second->kind == STRING)
@@ -172,9 +179,10 @@ void run(InstrList *instrList)
             }
             break;
         case IF_I:
-            aux = runIF_I(instrListAux->instr->first->contents.name, instrListAux->instr->second->contents.name, instrList);
+            aux = runIF_I(instrListAux->instr->first->contents.name, instrListAux->instr->second->contents.name);
             if (aux != NULL)
                 instrListAux = aux;
+            printf("mehhhhh %p\n", instrListAux);
             break;
         case PRINT:
             runPRINT(instrListAux->instr->first->contents.name);
@@ -183,7 +191,7 @@ void run(InstrList *instrList)
             runREAD(instrListAux->instr->first->contents.name);
             break;
         case GOTO_I:
-            instrListAux = runGOTO_I(instrListAux->instr->first->contents.name, instrList);
+            instrListAux = runGOTO_I(instrListAux->instr->first->contents.name);
             break;
         case LABEL:
             break;
@@ -222,17 +230,18 @@ void runDIV(char *name, int a, int b)
     insert(name, a / b);
 }
 
-InstrList *runIF_I(char *var, char *label, InstrList *instrList)
+InstrList *runIF_I(char *var, char *label)
 {
-    if (lookup(var) != NULL && lookup(var)->value != 0)
-        return runGOTO_I(label, instrList);
-    
+    if (lookup(var) != NULL)
+        if (lookup(var)->value != 0)
+            return runGOTO_I(label);
+
     return NULL;
 }
 
 void runPRINT(char *var)
 {
-    printf("The value of %s is: %d\n", var, lookup(var)->value);
+    printf("The value of %s is: %d\n", var, (int)lookup(var)->value);
 }
 
 void runREAD(char *var)
@@ -244,18 +253,13 @@ void runREAD(char *var)
     insert(var, x);
 }
 
-InstrList *runGOTO_I(char *label, InstrList *startInstrList)
+InstrList *runGOTO_I(char *label)
 {
-    while (startInstrList != NULL)
-    {
-        if (startInstrList->instr->op == LABEL)
-            if (!strcmp(startInstrList->instr->first->contents.name, label))
-            {
-                return startInstrList;
-            }
-
-        startInstrList = startInstrList->next;
-    }
+    if (lookup(label) != NULL)
+        if (lookup(label)->value != 0){
+            printf("going to %lx\n", lookup(label)->value);
+            return (void *)lookup(label)->value;
+        }
 
     printf("Error in interpreter: label \"%s\" does not exist!\n", label);
     exit(EXIT_FAILURE);
@@ -264,7 +268,7 @@ InstrList *runGOTO_I(char *label, InstrList *startInstrList)
 
 void runQUIT()
 {
-    printf("Apu Nahasapeemapetilon: Thank you come again!\n");
+    printf("Apu Nahasapeemapetilon: Thank you interpret again!\n");
     exit(EXIT_SUCCESS);
 }
 
@@ -356,7 +360,7 @@ List *lookup(char *key)
     return NULL;
 }
 
-void insert(char *key, int value)
+void insert(char *key, uintptr_t value)
 {
     int val = (int)hash(key);
     List *aux = (List *)malloc(sizeof(List));
