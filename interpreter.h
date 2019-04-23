@@ -63,7 +63,7 @@ Elem *mkVar(char *s);
 Elem *mkInt(int x);
 Elem *mkEmpty();
 Instr *mkInstr(OpKind op, Elem *x, Elem *y, Elem *z);
-InstrList *mkList(Instr *instr, InstrList** startInstrList, InstrList *endInstrList);
+InstrList *mkList(Instr *instr, InstrList **startInstrList, InstrList *endInstrList);
 
 void runATRIB(char *name, int val);
 void runADD(char *name, int a, int b);

@@ -105,7 +105,7 @@ void run(InstrList *instrList)
         switch (instrListAux->instr->op)
         {
         case ATRIB:
-            if(instrListAux->instr->second->kind == INT_CONST)
+            if (instrListAux->instr->second->kind == INT_CONST)
                 runATRIB(instrListAux->instr->first->contents.name, instrListAux->instr->second->contents.val);
             else
                 runATRIB(instrListAux->instr->first->contents.name, lookup(instrListAux->instr->second->contents.name)->value);
@@ -308,7 +308,7 @@ InstrList *mkList(Instr *instr, InstrList **startInstrList, InstrList *endInstrL
     instrListAux->instr = instr;
     instrListAux->next = NULL;
 
-    if(*startInstrList == NULL)
+    if (*startInstrList == NULL)
         *startInstrList = instrListAux;
 
     if (endInstrList != NULL)

@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     {
         Instr *instr = parser(line);
         endInstrList = mkList(instr, &startInstrList, endInstrList);
-        if(instr->op == LABEL)
+        if (instr->op == LABEL)
             insert(instr->first->contents.name, (intptr_t)endInstrList);
     }
     initHashTable();
